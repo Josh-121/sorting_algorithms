@@ -24,8 +24,8 @@ void swap_nodes(listint_t *node_1, listint_t *node_2, listint_t **head)
 }
 void insertion_sort_list(listint_t **list)
 {
-    listint_t *node = malloc(sizeof(listint_t));
-    listint_t *runner = malloc(sizeof(listint_t));
+    listint_t *node = malloc(sizeof(listint_t *));
+    listint_t *runner = malloc(sizeof(listint_t *));
     node = *list;
     while (node->next != NULL)
     {
