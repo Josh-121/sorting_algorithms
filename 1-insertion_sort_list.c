@@ -1,51 +1,58 @@
 #include "sort.h"
-void swap_nodes(listint_t *node_1, listint_t *node_2, listint_t **head)
-{
-    if (node_1->prev == NULL)
-    {
-        node_1->next = node_2->next;
-        node_2->next->prev = node_1;
-        node_2->prev = node_1->prev;
-        node_2->next = node_1;
-        node_1->prev = node_2; 
-        *head = node_2;
-    }
-    else
-    {
-        node_1->next = node_2->next;
-        if (node_2->next != NULL)
-           node_2->next->prev = node_1;
-        node_1->prev->next = node_2;
-        node_2->prev = node_1->prev;
-        node_2->next = node_1;
-        node_1->prev = node_2;
-    }
-    
-}
+
+void swap(listint_t **head, listint_t *node1, listint_t *node2);
+/**
+ * insertion_sort_list - sorts a doubly linked list with
+ * the insertion sort algorithm
+ *
+ * @list: list to be sorted
+ *
+ * Return: void
+ */
 void insertion_sort_list(listint_t **list)
 {
-    listint_t *node = malloc(sizeof(listint_t *));
-    listint_t *runner = malloc(sizeof(listint_t *));
-    node = *list;
-    while (node->next != NULL)
-    {
-        if(node->n > node->next->n)
-        {
-            swap_nodes(node,node->next, list);
-            print_list(*list);
-            runner = node->prev;
-            node = node->prev;
-            while (runner->prev != NULL)
-            {
-                if(runner->n < runner->prev->n)
-                {
-                    swap_nodes(runner->prev, runner, list);
-                    print_list(*list);
-                    runner = runner->next;
-                }
-                runner = runner->prev;
-            }
-        }
-        node = node->next;
-    }
+	listint_t *forw, *tmp;
+
+	if (list == NULL || *list == NULL || (*list)->next == NULL)
+		return;
+
+	for (forw = (*list)->next; forw && forw->prev; forw = forw->next)
+	{
+		for (; forw && forw->prev && forw->n < forw->prev->n;
+		     forw = forw->prev)
+		{
+			tmp = forw->prev;
+			swap(list, tmp, forw);
+			print_list(*list);
+			forw = forw->next;
+		}
+	}
+}
+
+/**
+ * swap - swaps two nodes
+ * @head: the head node
+ * @node1: The first node
+ * @node2: the second node
+ *
+ * Return: void
+ */
+void swap(listint_t **head, listint_t *node1, listint_t *node2)
+{
+	listint_t *prev, *next;
+
+	prev = node1->prev;
+	next = node2->next;
+
+	if (prev != NULL)
+		prev->next = node2;
+	else
+		*head = node2;
+
+	node1->prev = node2;
+	node1->next = next;
+	node2->prev = prev;
+	node2->next = node1;
+	if (next)
+		next->prev = node1;
 }
